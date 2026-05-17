@@ -1,21 +1,28 @@
-# YewChat 💬
+# Module 10 - Tutorial 3 (WebChat using Yew)
 
-> Source code for [Let’s Build a Websocket Chat Project With Rust and Yew 0.19 🦀](https://fsjohnny.medium.com/lets-build-a-websockets-project-with-rust-and-yew-0-19-60720367399f)
+## Experiment 3.1: Original Code
 
-## Install
+### Cara Menjalankan
 
-1. Install the required toolchain dependencies:
-   ```npm i```
+1. Jalankan websocket server (bisa pake repo https://github.com/jtordgeman/SimpleWebsocketServer, terus ikutin step nya di readme nya)
 
-2. Follow the YewChat post!
+2. Jalankan Yew client (repo ini):
+   ```bash
+   npm start
+   ```
 
-## Branches
+3. Buka browser:
+   ```text
+   http://localhost:8000
+   ```
 
-This repository is divided to branches that correspond to the blog post sections:
+### Screenshots
 
-* main - The starter code.
-* routing - The code at the end of the Routing section.
-* components-part1 - The code at the end of the Components-Phase 1 section.
-* websockets - The code at the end of the Hello Websockets! section.
-* components-part2 - The code at the end of the Components-Phase 2 section.
-* websockets-part2 - The code at the end of the WebSockets-Phase 2 section.
+![server](media/3.1-server-run.png)
+![client](media/3.1-client-run.png)
+![login](media/3.1-login.png)
+![chat](media/3.1-chat.png)
+
+### Reflection / Notes
+
+Di eksperimen 3.1 ini aku jalanin server websocket dan client YewChat secara bersamaan gitu. Server jalan di port 8080, sedangkan client di port 8000. Setelah server dan client berhasil dijalankan, webchat dapat diakses lewat browser di localhost:8000. User bisa masukin username lalu masuk ke halaman chat untuk ngirim pesan realtime lewat websocket connection. Dari experiment ini aku jadi lebih ngerti gimana asynchronous programming dan websocket dipakai di aplikasi web realtime. Selain itu aku juga jadi lebih ngerti gimana Rust bisa dipakai buat frontend web application pake Yew dan WebAssembly.
