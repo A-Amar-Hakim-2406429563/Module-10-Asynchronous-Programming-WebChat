@@ -57,3 +57,51 @@ Tambahan Keterangan UI nya
 ### Reflection / Notes
 
 Di experiment 3.2 ini aku fokus bikin tampilan yang simpel tapi lebih enak dilihat. Aku ganti warna biar konsisten dan gampang dilihat. Di halaman chat aku tambahin toggle light/dark mode biar bisa ganti theme nya gitu. Tombol masuk di login nya juga aku bikin full lebar biar lebih rapi. Terus utk tampilan UI di chat room nya juga aku ubah2 dikit biar lebih simple dan infonya dapet semua gitu.
+
+## Bonus: Rust Websocket Server for YewChat
+
+### Screenshots
+Satu user
+
+- login
+![alt text](media/bonus-login.png)
+- chat
+![alt text](media/bonus-chat.png)
+- server
+![alt text](media/bonus-server.png)
+
+Dua user
+
+- login user 2
+![alt text](media/bonus-login2.png)
+- login user 2 server
+![alt text](media/bonus-two-user.png)
+- chat 2 user
+![alt text](media/bonus-two-user-chat.png)
+- chat 2 user server
+![alt text](media/bonus-two-user-chat-server.png)
+
+
+### Cara Menjalankan
+
+1. Jalankan server Rust (tutorial 2):
+   ```bash
+   cd ../chat-async
+   cargo run --bin server
+   ```
+
+2. Jalankan Yew client (repo ini):
+   ```bash
+   npm start
+   ```
+
+3. Buka browser:
+   ```text
+   http://localhost:8000
+   ```
+
+### Penjelasan
+
+Aku ubah server Rust di tutorial 2 supaya ngerti format JSON yang dipake YewChat. Server sekarang baca event `register` dan `message`, simpan daftar user, lalu broadcast list user dan chat message ke semua client. Format pesan tetap dikirim sebagai text JSON, jadi client YewChat gk perlu diubah dan tetap pakai `ws://127.0.0.1:8080`.
+
+Perubahan ini berhasil krn protocol antara client dan server jadi sama, jadi UI bisa jalan normal dan list user + pesan masuk seperti biasa. Buat aku pribadi, versi Rust lebih enak buat dipelihara krn tipe datanya jelas, tapi versi JavaScript lebih gampang buat quick start gituu.
