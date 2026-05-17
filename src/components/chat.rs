@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use web_sys::HtmlInputElement;
+use web_sys::{HtmlInputElement, KeyboardEvent};
 use yew::prelude::*;
 use yew_agent::{Bridge, Bridged};
 
@@ -10,6 +10,7 @@ use crate::User;
 pub enum Msg {
     HandleMsg(String),
     SubmitMessage,
+    ToggleTheme,
 }
 
 #[derive(Deserialize)]
@@ -40,6 +41,7 @@ pub struct Chat {
     _producer: Box<dyn Bridge<EventBus>>,
     wss: WebsocketService,
     messages: Vec<MessageData>,
+    is_dark: bool,
 }
 
 impl Component for Chat {
@@ -75,6 +77,7 @@ impl Component for Chat {
             chat_input: NodeRef::default(),
             wss,
             _producer: EventBus::bridge(ctx.link().callback(Msg::HandleMsg)),
+            is_dark: false,
         }
     }
 
@@ -122,29 +125,57 @@ impl Component for Chat {
                 };
                 false
             }
+            Msg::ToggleTheme => {
+                self.is_dark = !self.is_dark;
+                true
+            }
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let online_count = self.users.len();
         let submit = ctx.link().callback(|_| Msg::SubmitMessage);
+        let toggle_theme = ctx.link().callback(|_| Msg::ToggleTheme);
+        let submit_on_enter = ctx.link().batch_callback(|e: KeyboardEvent| {
+            if e.key() == "Enter" {
+                Some(Msg::SubmitMessage)
+            } else {
+                None
+            }
+        });
+        let theme_label = if self.is_dark { "Light" } else { "Dark" };
+        let theme_class = if self.is_dark {
+            "chat-shell theme-dark"
+        } else {
+            "chat-shell"
+        };
 
         html! {
-            <div class="chat-shell">
+            <div class={theme_class}>
                 <aside class="chat-sidebar">
                     <div class="chat-brand">{"YewChat"}</div>
+                    <div class="chat-room">{"Studio Room"}</div>
+                    <div class="chat-room-meta">{format!("Online: {}", online_count)}</div>
+                    <div class="chat-room-meta">{"ws://127.0.0.1:8080"}</div>
                     <div class="chat-users-title">{"Users"}</div>
                     <ul class="chat-users">
+                        if self.users.is_empty() {
+                            <li class="chat-user chat-user-empty">{"Belum ada user"}</li>
+                        }
                         {for self.users.iter().map(|u| html! {<li class="chat-user">{u}</li>})}
                     </ul>
                 </aside>
                 <main class="chat-main">
                     <header class="chat-header">
                         <div class="chat-title">{"Chat Room"}</div>
-                        <div class="chat-subtitle">{"ws://127.0.0.1:8080"}</div>
+                        <div class="chat-header-actions">
+                            <button class="chat-theme-toggle" onclick={toggle_theme}>{theme_label}</button>
+                            <div class="chat-status">{format!("Online: {}", online_count)}</div>
+                        </div>
                     </header>
                     <section class="chat-messages">
                         if self.messages.is_empty() {
-                            <div class="chat-empty">{"No messages yet."}</div>
+                            <div class="chat-empty">{"Belum ada pesan."}</div>
                         }
                         {for self.messages.iter().map(|m| html! {
                             <div class="chat-message">
@@ -156,12 +187,13 @@ impl Component for Chat {
                     <div class="chat-input">
                         <input
                             ref={self.chat_input.clone()}
+                            onkeypress={submit_on_enter}
                             type="text"
-                            placeholder="Type a message"
+                            placeholder="Ketik pesan"
                             name="message"
                             required=true
                         />
-                        <button onclick={submit}>{"Send"}</button>
+                        <button onclick={submit}>{"Kirim"}</button>
                     </div>
                 </main>
             </div>

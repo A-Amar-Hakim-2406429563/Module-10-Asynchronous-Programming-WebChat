@@ -29,7 +29,7 @@ pub fn login() -> Html {
         <div class="login-shell">
             <div class="login-card">
                 <div class="login-title">{"YewChat"}</div>
-                <p class="login-subtitle">{"Enter your name to join the chat."}</p>
+                <p class="login-subtitle">{"Masuk dulu biar bisa chat."}</p>
                 <div class="login-form">
                     <input
                         {oninput}
@@ -42,10 +42,11 @@ pub fn login() -> Html {
                             disabled={username.len() < 1}
                             class="login-button"
                         >
-                            {"Join chat"}
+                            {"Masuk"}
                         </button>
                     </Link<Route>>
                 </div>
+                <div class="login-footer">{"Yew + WebAssembly"}</div>
             </div>
         </div>
     }
